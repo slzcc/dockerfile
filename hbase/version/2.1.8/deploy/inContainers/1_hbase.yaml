@@ -19,7 +19,7 @@ spec:
         app: hbase
     spec:
       nodeSelector:
-          zhangyue-ops.com/schedule-hbase-01: "true"
+          hotstone.io/schedule-hbase-01: "true"
       tolerations:
       - key: "special"
         operator: "Equal"

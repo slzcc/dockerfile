@@ -1,4 +1,4 @@
-FROM harbor.ops.zhangyue-ops.com/public/centos:7.8.2003
+FROM centos:7.8.2003
 
 ARG TENGINE_VERSION=2.3.2
 ARG BASE_PATH=/opt
@@ -6,7 +6,7 @@ ARG LIBRARY_PATH=/$BASE_PATH/install
 ARG SERVER_PATH=/$BASE_PATH/server
 ARG LOG_PATH=/$BASE_PATH/logs
 
-RUN curl http://upload.ops.zhangyue-ops.com/yum/set_nexus_catyum.sh|bash -x
+RUN curl http://upload.ops.hotstone.io/yum/set_nexus_catyum.sh|bash -x
 
 RUN yum -y install gcc gcc-c++ bzip2 perl curl curl-devel expat-devel gettext-devel \
                    openssl-devel libxml2 libxml2-devel libjpeg-devel libpng-devel freetype-devel \
@@ -21,7 +21,7 @@ RUN wget -qO- http://192.168.7.24/libunwind-1.1.tar.gz | tar zx -C $LIBRARY_PATH
     cd $LIBRARY_PATH/gperftools-2.1 && ./configure && make -j32 && make install -j32 && \
     wget -qO- http://192.168.7.24/LuaJIT-2.1.0.tar.gz | tar zx -C $LIBRARY_PATH && \
     cd $LIBRARY_PATH/LuaJIT-2.1.0 && make -j32 && make install -j32 && \
-    wget -qO- http://upload.ops.zhangyue-ops.com/software/jemalloc/jemalloc-4.4.0.tar.bz2 | tar jx -C $LIBRARY_PATH && \
+    wget -qO- http://upload.ops.hotstone.io/software/jemalloc/jemalloc-4.4.0.tar.bz2 | tar jx -C $LIBRARY_PATH && \
     cd $LIBRARY_PATH/jemalloc-4.4.0 && ./configure --prefix=/$SERVER_PATH/jemalloc && make -j32 && make install -j32 && \
     cd $LIBRARY_PATH/ && \
     wget -qO- http://192.168.7.24/lua-nginx-module-0.10.17.tar.gz | tar zx -C $LIBRARY_PATH && \
@@ -29,9 +29,9 @@ RUN wget -qO- http://192.168.7.24/libunwind-1.1.tar.gz | tar zx -C $LIBRARY_PATH
     wget -qO- http://192.168.7.24/ngx_devel_kit-0.3.1.tar.gz | tar zx -C $LIBRARY_PATH && \
     wget -qO- http://192.168.7.24/lua-upstream-nginx-module-master.zip > lua-upstream-nginx-module-master.zip && \
     wget -qO- http://192.168.7.24/tengine-$TENGINE_VERSION.tar.gz | tar zx -C $LIBRARY_PATH && \
-    wget -qO- http://upload.ops.zhangyue-ops.com/software/openssl/openssl-1.0.2j.tar.gz | tar zx -C $LIBRARY_PATH && \
-    wget -qO- http://upload.ops.zhangyue-ops.com/software/pcre/pcre-8.39.tar.gz | tar zx -C $LIBRARY_PATH && \
-    wget -qO- http://upload.ops.zhangyue-ops.com/software/zlib/zlib-1.2.11.tar.gz | tar zx -C $LIBRARY_PATH && \
+    wget -qO- http://upload.ops.hotstone.io/software/openssl/openssl-1.0.2j.tar.gz | tar zx -C $LIBRARY_PATH && \
+    wget -qO- http://upload.ops.hotstone.io/software/pcre/pcre-8.39.tar.gz | tar zx -C $LIBRARY_PATH && \
+    wget -qO- http://upload.ops.hotstone.io/software/zlib/zlib-1.2.11.tar.gz | tar zx -C $LIBRARY_PATH && \
     unzip lua-upstream-nginx-module-master.zip
 
 RUN echo "/usr/local/lib" >> /etc/ld.so.conf && ldconfig

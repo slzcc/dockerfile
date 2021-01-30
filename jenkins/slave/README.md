@@ -5,5 +5,5 @@
 
 ```
 Dockerfile-python3
-harbor.ops.zhangyue-ops.com/jenkins/jnlp:ubuntu-tool-v2
+slzccjenkins/jnlp:ubuntu-tool-v2
 ```

@@ -1,0 +1,37 @@
+FROM ubuntu:20.04
+
+ENV DUMB_INIT_VER="1.2.2" \
+    S3_BUCKET='' \
+    MNT_POINT="/data" \
+    S3_REGION='' \
+    AWS_KEY='' \
+    AWS_SECRET_KEY=''
+ 
+RUN apt update && \
+    echo "Asia/Shanghai" > /etc/timezone && \
+    apt install -y tzdata && \
+    dpkg-reconfigure -f noninteractive tzdata && \
+    apt-get install -y automake autotools-dev g++ git libcurl4-gnutls-dev wget \
+                       libfuse-dev libssl-dev libxml2-dev make pkg-config \
+                       syslog-ng fonts-baekmuk fonts-nanum language-pack-zh-hans supervisor && \
+    git clone https://github.com/s3fs-fuse/s3fs-fuse.git /tmp/s3fs-fuse && \
+    cd /tmp/s3fs-fuse && ./autogen.sh && ./configure && make && make install && \
+    ldconfig && /usr/local/bin/s3fs --version && \
+    wget -O /tmp/dumb-init_${DUMB_INIT_VER}_amd64.deb https://github.com/Yelp/dumb-init/releases/download/v${DUMB_INIT_VER}/dumb-init_${DUMB_INIT_VER}_amd64.deb && \
+    dpkg -i /tmp/dumb-init_*.deb
+ 
+RUN echo "${AWS_KEY}:${AWS_SECRET_KEY}" > /etc/passwd-s3fs && \
+    chmod 0400 /etc/passwd-s3fs
+ 
+RUN mkdir -p "$MNT_POINT"
+ 
+RUN DEBIAN_FRONTEND=noninteractive apt-get purge -y wget automake autotools-dev g++ git make && \
+    apt-get -y autoremove --purge && apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+ 
+# Runs "/usr/bin/dumb-init -- CMD_COMMAND_HERE"
+#ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+
+COPY docker-entrypoint.sh /docker-entrypoint
+
+CMD ["/docker-entrypoint"]

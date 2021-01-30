@@ -7,7 +7,7 @@
 Taint 配置如下：
 
 ```
-$ kubectl label nodes <nodes> zhangyue-ops.com/schedule-hbase-01=true
+$ kubectl label nodes <nodes> hotstone.io/schedule-hbase-01=true
 $ kubectl taint nodes <nodes> application=bigdata:NoSchedule
 $ kubectl taint nodes <nodes> organization=user:NoSchedule
 $ kubectl taint nodes <nodes> special=true:NoSchedule

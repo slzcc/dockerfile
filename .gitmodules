@@ -1,0 +1,9 @@
+[submodule "openldap"]
+	path = openldap
+	url = https://github.com/slzcc/openldap
+[submodule "UploadServer"]
+	path = UploadServer
+	url = https://github.com/slzcc/UploadServer
+[submodule "TranscodePDF"]
+	path = TranscodePDF
+	url = https://github.com/slzcc/TranscodePDF

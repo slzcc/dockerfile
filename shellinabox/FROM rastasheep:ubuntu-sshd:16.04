@@ -1,0 +1,8 @@
+FROM rastasheep/ubuntu-sshd:16.04
+RUN apt install -y openssl shellinabox vim sudo && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /var/cache/apt/archives/*
+RUN useradd siemens -m -d /home/shileizcc -s /bin/bash -g 0 -G sudo
+RUN echo shileizcc:shileizcc | chpasswd
+EXPOSE 4200
+CMD /etc/init.d/shellinabox start && /usr/sbin/sshd -D

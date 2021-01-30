@@ -1,0 +1,89 @@
+FROM ubuntu:16.04
+  
+RUN apt update && \
+    apt install -y wget make gcc g++ openssl curl vim git autoconf zip
+  
+RUN apt install -y libxml2-dev libssl-dev libcurl4-openssl-dev libpng-dev build-essential libexpat1-dev libgeoip-dev libpng-dev libpcre3-dev libssl-dev libxml2-dev rcs zlib1g-dev libmcrypt-dev libcurl4-openssl-dev libjpeg-dev libpng-dev libwebp-dev pkg-config libfreetype6-dev libxslt-dev libzip-dev && \
+    groupadd nobody && \
+    rm -rf /var/cache/apt/archives/*
+  
+RUN wget -qO- http://jp2.php.net/distributions/php-5.5.37.tar.gz > /php-5.5.37.tar.gz && \
+    tar zxf /php-5.5.37.tar.gz -C /
+  
+RUN cd /php-5.5.37 && ./configure --prefix=/usr/local/php5 \
+    --with-config-file-path=/usr/local/php5/etc \
+    --enable-mysqlnd \
+    --with-pdo-mysql=mysqlnd \
+    --enable-fpm \
+    --with-openssl \
+    --enable-mbstring \
+    --with-curl \
+    --with-gd \
+    --with-jpeg-dir \
+    --with-iconv-dir=/usr/bin/iconv \
+    --with-freetype-dir \
+    --with-jpeg-dir \
+    --with-png-dir \
+    --with-zlib \
+    --with-libxml-dir=/usr \
+    --with-gettext \
+    --enable-xml \
+    --disable-rpath \
+    --enable-bcmath \
+    --enable-shmop \
+    --enable-sysvsem \
+    --enable-inline-optimization \
+    --with-mcrypt \
+    --enable-gd-native-ttf \
+    --with-mhash \
+    --enable-pcntl \
+    --enable-sockets \
+    --with-xmlrpc \
+    --enable-soap \
+    --enable-short-tags \
+    --enable-static \
+    --with-xsl \
+    --enable-ftp \
+    --enable-opcache=no && make && make install && \
+    cp -a ./php.ini-production /usr/local/php5/etc/php.ini && \
+    cp -a /usr/local/php5/etc/php-fpm.conf.default /usr/local/php5/etc/php-fpm.conf && \
+    cp -a ./sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm && chmod 755 /etc/init.d/php-fpm
+  
+RUN for i in pear peardev pecl phar phar.phar php php-cgi php-config phpdbg phpize;do ln -s /usr/local/php5/bin/$i /usr/local/bin/$i ;done
+  
+# memcached module
+RUN git clone https://github.com/websupport-sk/pecl-memcache /tmp/memcached && cd /tmp/memcached && /usr/local/php5/bin/phpize && ./configure && make && make install && echo "extension=memcache.so" >> /usr/local/php5/etc/php.ini
+  
+COPY www.conf /usr/local/php5/etc/php-fpm.d/www.conf
+  
+RUN mkdir -p /data/html && echo -e "<?php\nphpinfo();\n?>" > /data/html/index.php
+  
+# mysql module
+RUN cd /php-5.5.37/ext/mysql && \
+    phpize && \
+    ./configure --with-php-config=/usr/local/php5/bin/php-config && \
+    make && make install && \
+    echo "extension=mysql.so" >> /usr/local/php5/etc/php.ini
+ 
+# mysqli module
+RUN cd /php-5.5.37/ext/mysqli && \
+    phpize && \
+    ./configure --with-php-config=/usr/local/php5/bin/php-config && \
+    make && make install && \
+    echo "extension=mysqli.so" >> /usr/local/php5/etc/php.ini
+ 
+# zip_open module
+RUN wget http://pecl.php.net/get/zip-1.15.3.tgz && \
+    tar -zxvf zip-1.15.3.tgz && \
+    cd zip-1.15.3 && \
+    /usr/local/php5/bin/phpize && \
+    ./configure --with-php-config=/usr/local/php5/bin/php-config && \
+    make && make install && \
+    sed -i "s/zlib.output_compression\ =\ Off/zlib.output_compression\ =\ On/" /usr/local/php5/etc/php.ini && \
+    echo "extension=zip.so" >> /usr/local/php5/etc/php.ini
+  
+WORKDIR /data/html
+  
+EXPOSE 9000
+  
+CMD /etc/init.d/php-fpm start && tailf /usr/local/php5/var/log/php-fpm.log

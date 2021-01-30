@@ -1,0 +1,24 @@
+FROM ubuntu:20.04
+LABEL AuthorEmail 383821949@qq.com \
+      Domain Shileizcc.com \
+      CreateTime 2021年 01月 27日 星期三
+ 
+COPY atlassian /opt/atlassian
+COPY application-data /var/atlassian/application-data
+COPY *.sql /
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+ 
+RUN apt-get update && \
+    apt install -y libnuma1 fontconfig-config fonts-dejavu-core libfontconfig1 \
+    fontconfig fontconfig-config fonts-dejavu-core libfontconfig1 fonts-dejavu-extra \
+    fonts-dejavu fonts-dejavu-extra fonts-noto-cjk-extra fonts-noto-cjk fonts-baekmuk \
+    fonts-nanum language-pack-zh-hans vim fontconfig && \
+    rm -rf /var/lib/apt/lists/* && \
+    fc-cache --force
+ 
+ENV TZ="Asia/Shanghai" \
+    LC_ALL="zh_CN.utf-8"
+ 
+EXPOSE 8090 8000
+ 
+CMD ["/docker-entrypoint.sh"]

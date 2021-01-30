@@ -1,0 +1,24 @@
+FROM slzcc/java:java-jdk-1.8.0.201
+ 
+RUN apt update && \
+    apt install -y gcc g++ make libexpat1-dev wget
+ 
+RUN wget -qO- http://mirrors.tuna.tsinghua.edu.cn/apache/tomcat/tomcat-9/v9.0.20/bin/apache-tomcat-9.0.20.tar.gz | tar zx -C /opt && \
+    mv /opt/apache-tomcat-9.0.20 /usr/local/tomcat
+ 
+RUN wget http://mirrors.tuna.tsinghua.edu.cn/apache//apr/apr-1.7.0.tar.gz -P /opt && \
+    tar zxf /opt/apr-1.7.0.tar.gz -C /opt && cd /opt/apr-1.7.0/ && \
+    ./configure --prefix=/usr/local/apr && make && make install
+ 
+RUN wget http://mirrors.tuna.tsinghua.edu.cn/apache//apr/apr-util-1.6.1.tar.gz -P /opt && \
+    tar zxf /opt/apr-util-1.6.1.tar.gz -C /opt && cd /opt/apr-util-1.6.1 && \
+    ./configure --with-apr=/usr/local/apr/ --prefix=/usr/local/apr-utils && make && make install
+ 
+RUN cd /usr/local/tomcat/bin/ && tar zxf tomcat-native.tar.gz -C /opt && cd /opt/tomcat-native-1.2.21-src/native && \
+    ./configure --with-apr=/usr/local/apr/bin/apr-1-config --with-java-home=/usr/local/jdk && make && make install
+ 
+ENV LD_LIBRARY_PATH=/usr/local/apr/lib
+ 
+COPY server.xml /usr/local/tomcat/conf/server.xml
+ 
+CMD /usr/local/tomcat/bin/startup.sh && tail -f /usr/local/tomcat/logs/catalina.out

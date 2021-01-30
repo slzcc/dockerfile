@@ -24,7 +24,7 @@
         "jenkins": {
             "stage": {},
             "email": {
-                "successful": ["shilei@zhangyue.com"],
+                "successful": ["shilei@hotstone.com.cn"],
                 "failure": [""],
                 "warning": [""]
             }

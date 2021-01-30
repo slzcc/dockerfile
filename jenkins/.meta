@@ -1,0 +1,38 @@
+{
+    "template": {
+        "docs": "http://192.168.6.70/opsdev/devops-pipeline-template",
+        "type": "default"
+    },
+    "department": {
+        "name": "devops",
+        "leader": ""
+    },
+    "deploy": {
+        "service": {
+            "name": "jenkins-jnlp",
+            "version": "",
+            "language": {
+                "name": "jenkins",
+                "type": "golang"
+            }
+        },
+        "kubernetes": {
+            "profile": {},
+            "cluster": [],
+            "helm": {}
+        },
+        "jenkins": {
+            "stage": {},
+            "email": {
+                "successful": ["shilei@zhangyue.com"],
+                "failure": [""],
+                "warning": [""]
+            }
+        }
+    },
+    "docker": {
+        "registry": "harbor.aws.ops.zhangyue-ops.com",
+        "organization": "devops",
+        "project": "jenkins-jnlp"
+    }
+}

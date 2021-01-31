@@ -23,11 +23,9 @@ RUN apt update && \
     echo "Asia/Shanghai" > /etc/timezone && \
     apt install -y tzdata && \
     dpkg-reconfigure -f noninteractive tzdata && \
-    apt-get install -y jq telnet curl wget git unzip vim bind9-utils git-lfs inetutils-ping \
+    apt-get install -y apt-utils jq telnet curl wget git unzip vim bind9-utils git-lfs inetutils-ping \
     fonts-dejavu fonts-dejavu-extra fonts-noto-cjk-extra fonts-noto-cjk fonts-baekmuk zlib1g-dev && \
-    fc-cache --force && \
     apt autoremove --purge -y python3 python3-pip && \
-    locale-gen en_US.UTF-8 && \
     rm -rf /var/lib/apt/lists/* && \
     apt clean
 

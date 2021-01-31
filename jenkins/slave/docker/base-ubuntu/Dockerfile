@@ -59,7 +59,7 @@ COPY --from=PYTHON /opt/python3 /opt/python3
 RUN pip3 install --upgrade pip && \
     npm install n -g && n stable && \
     ln -sf /usr/local/jdk/bin/* /usr/bin/ && \
-    ln -sf /opt/python3/bin/python3 /usr/bin/python3
+    ln -sf /opt/python3/bin/python3 /usr/bin/python3 && \
     rm -rf /tmp/*
 
 ENV TZ="Asia/Shanghai" \

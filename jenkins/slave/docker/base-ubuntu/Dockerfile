@@ -20,17 +20,13 @@ USER root
 
 # install Base Tools
 RUN apt update && \
-    apt-get install -y software-properties-common && \
-    add-apt-repository ppa:openjdk-r/ppa && \
-    apt-get update && \
-    apt-get install openjdk-8-jdk -y && \
     apt-get install -y jq telnet curl wget git unzip vim npm nodejs bind9-utils git-lfs inetutils-ping \
     fonts-dejavu fonts-dejavu-extra fonts-noto-cjk-extra fonts-noto-cjk fonts-baekmuk zlib1g-dev \
-    fonts-nanum language-pack-zh-hans fontconfig libcurl4-openssl-dev \
-    rm -rf /var/lib/apt/lists/* && \
+    fonts-nanum language-pack-zh-hans fontconfig libcurl4-openssl-dev ** \
     fc-cache --force && \
     apt autoremove --purge -y python3 python3-pip && \
     locale-gen en_US.UTF-8 && \
+    rm -rf /var/lib/apt/lists/* && \
     apt clean
 
 # install Kubectl

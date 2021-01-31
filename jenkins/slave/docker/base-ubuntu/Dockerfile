@@ -58,13 +58,6 @@ COPY --from=JDK /jdk1.8.0_201 /usr/local/jdk
 # install Python3
 COPY --from=PYTHON /opt/python3 /opt/python3
 
-# Custom
-RUN pip3 install --upgrade pip && \
-    npm install n -g && n stable && \
-    ln -sf /usr/local/jdk/bin/* /usr/bin/ && \
-    ln -sf /opt/python3/bin/python3 /usr/bin/python3 && \
-    rm -rf /tmp/*
-
 ENV TZ="Asia/Shanghai" \
     LC_ALL="en_US.UTF-8" \
     LANG=en_US.UTF-8 \
@@ -73,6 +66,13 @@ ENV TZ="Asia/Shanghai" \
     JAVA_HOME=/usr/local/jdk \
     JAVA_BIN=/usr/local/jdk/bin \
     JRE_HOME=/usr/local/jdk/jre \
-    PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/python3/bin/
+    PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/python3/bin
+    
+# Custom
+RUN pip3 install --upgrade pip && \
+    npm install n -g && n stable && \
+    ln -sf /usr/local/jdk/bin/* /usr/bin/ && \
+    ln -sf /opt/python3/bin/python3 /usr/bin/python3 && \
+    rm -rf /tmp/*
 
 ENTRYPOINT ["/sbin/tini" "--" "/usr/local/bin/jenkins-slave"]

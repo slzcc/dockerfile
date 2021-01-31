@@ -67,10 +67,11 @@ ENV TZ="Asia/Shanghai" \
     JAVA_BIN=/usr/local/jdk/bin \
     JRE_HOME=/usr/local/jdk/jre \
     PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/python3/bin
-    
+
 # Custom
-RUN pip3 install --upgrade pip && \
-    npm install n -g && n stable && \
+RUN /opt/python3/bin/pip3 install ssl && \
+    /opt/python3/bin/pip3 install --upgrade pip && \
+    npm install -g npm && \
     ln -sf /usr/local/jdk/bin/* /usr/bin/ && \
     ln -sf /opt/python3/bin/python3 /usr/bin/python3 && \
     rm -rf /tmp/*

@@ -1,62 +1,74 @@
+FROM ubuntu:20.04 as PYTHON
+
+RUN apt install -y gcc make openssl g++
+
+RUN wget -qO- https://www.python.org/ftp/python/3.8.7/Python-3.8.7.tgz | tar zx -C /tmp && \
+    cd /tmp/Python-3.8.7 && \
+    ./configure --prefix=/opt/python3 && \
+    make -j8 && make install
+
+FROM docker:20.10.2 as DockerCli
+
+FROM jenkinsci/jnlp-slave:4.6.1 as JNLP
+
 FROM slzcc/java:java-jdk-1.8.0.201 AS JDK
 
 FROM ubuntu:20.04
 
-LABEL AuthorEmail 383821949@qq.com \
-      Domain Shileizcc.com \
-      CreateTime 2021年 01月 31日 星期日
+USER root
 
-ARG AGENT_VERSION=4.6
-
+# install Base Tools
 RUN apt update && \
     apt-get install -y software-properties-common && \
     add-apt-repository ppa:openjdk-r/ppa && \
     apt-get update && \
     apt-get install openjdk-8-jdk -y && \
-    apt install -y gcc make jq telnet curl wget git lrzsz unzip vim maven npm nodejs dnsutils vim git-lfs \
+    apt-get install -y jq telnet curl wget git unzip vim npm nodejs bind9-utils git-lfs inetutils-ping \
     fonts-dejavu fonts-dejavu-extra fonts-noto-cjk-extra fonts-noto-cjk fonts-baekmuk \
-    fonts-nanum language-pack-zh-hans vim fontconfig supervisor libcurl4-openssl-dev \
+    fonts-nanum language-pack-zh-hans fontconfig libcurl4-openssl-dev \
     rm -rf /var/lib/apt/lists/* && \
     fc-cache --force && \
     apt autoremove --purge -y python3 python3-pip && \
     locale-gen en_US.UTF-8 && \
     apt clean
 
+# install Kubectl
+# RUN wget -qO- https://dl.k8s.io/v1.20.2/kubernetes-client-linux-amd64.tar.gz | tar zx -C /tmp/ && \
+#     mv /tmp/kubernetes/client/bin/kubectl /usr/local/bin/
+
+# install Sonar Scanner Cli
+# RUN wget -qO- https://mirror.shileizcc.com/SonarQube/sonar-scanner-cli-3.0.3.778.zip > /tmp/sonar-scanner-cli-3.0.3.778.zip && \
+#     unzip -d /tmp/ /tmp/sonar-scanner-cli-3.0.3.778.zip && \
+#     mv /tmp/sonar-scanner-3.0.3.778/bin/* /usr/local/bin/ 
+
 # install Maven
-RUN wget -qO- http://mirrors.tuna.tsinghua.edu.cn/apache/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz | tar zx -C /opt && \
+RUN wget -qO- http://mirrors.tuna.tsinghua.edu.cn/apache/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz | tar zx -C /opt/ && \
     ln -sf /opt/apache-maven-3.6.3/bin/mvn /usr/local/bin/
 
-RUN wget -qO- https://download.docker.com/linux/static/stable/x86_64/docker-20.10.0.tgz | tar zx -C /tmp && \
-    mv /tmp/docker/bin/docker /bin/docker && \
-    rm -rf /tmp/docker
+# install Jenkins slave Plugin
+COPY --from=JNLP /usr/local/bin/jenkins-slave /usr/local/bin/
+COPY --from=JNLP /usr/share/jenkins/slave.jar /usr/share/jenkins/slave.jar
+# install Docker Cli
+COPY --from=DockerCli /usr/local/bin/docker /usr/local/bin
+# install Java JDK
+COPY --from=JDK /jdk1.8.0_201 /usr/local/jdk
+# install Python3
+COPY --from=PYTHON /opt/python3 /opt/python3
 
-RUN wget -qO- https://www.python.org/ftp/python/3.8.7/Python-3.8.7.tgz | tar zx -C /tmp && \
-    cd /tmp/Python-3.8.7 && \
-    ./configure --prefix=/usr/local/python3 && \
-    make -j8 && make install && \
+# Custom
+RUN pip3 install --upgrade pip && \
+    npm install n -g && n stable && \
+    ln -sf /usr/local/jdk/bin/* /usr/bin/ && \
     rm -rf /tmp/*
 
-RUN wget -qO- https://github.com/krallin/tini/releases/download/v0.19.0/tini-amd64 > /sbin/tini && \
-    chmod +x /sbin/tini
-
-# https://github.com/jenkinsci/remoting/releases
-RUN curl --create-dirs -fsSLo /usr/share/jenkins/agent.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${AGENT_VERSION}/remoting-${AGENT_VERSION}.jar && \
-    chmod 755 /usr/share/jenkins && \
-    chmod 644 /usr/share/jenkins/agent.jar && \
-    ln -sf /usr/share/jenkins/agent.jar /usr/share/jenkins/slave.jar
-
-COPY jenkins-slave /usr/local/bin/jenkins-slave
-
-RUN npm install n -g && n stable
-
-ENV ENV TZ="Asia/Shanghai" \
-    M2_HOME=/opt/apache-maven-3.6.3 \
+ENV TZ="Asia/Shanghai" \
     LC_ALL="en_US.UTF-8" \
     LANG=en_US.UTF-8 \
-    MAVEN_VERSION=3.3.9 \
-    MAVEN_HOME=/usr/share/maven \
-    JRE_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre/ \
-    JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/ \
-    PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/python3/bin/
+    MAVEN_VERSION=3.6.3 \
+    MAVEN_HOME=/opt/apache-maven-3.6.3 \
+    JAVA_HOME=/usr/local/jdk \
+    JAVA_BIN=/usr/local/jdk/bin \
+    JRE_HOME=/usr/local/jdk/jre \
+    PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/python3/bin/
 
 ENTRYPOINT ["/sbin/tini" "--" "/usr/local/bin/jenkins-slave"]

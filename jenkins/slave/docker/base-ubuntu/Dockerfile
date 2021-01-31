@@ -24,8 +24,9 @@ RUN apt update && \
     apt install -y tzdata && \
     dpkg-reconfigure -f noninteractive tzdata && \
     apt-get install -y apt-utils jq telnet curl wget git unzip vim bind9-utils git-lfs inetutils-ping fontconfig \
-    fonts-dejavu fonts-dejavu-extra fonts-noto-cjk-extra fonts-noto-cjk fonts-baekmuk zlib1g-dev libssl-dev && \
+    fonts-dejavu fonts-dejavu-extra fonts-noto-cjk-extra fonts-noto-cjk fonts-baekmuk zlib1g-dev libssl-dev locales && \
     fc-cache --force && \
+    locale-gen en_US.UTF-8 && \
     apt autoremove --purge -y python3 python3-pip && \
     rm -rf /var/lib/apt/lists/* && \
     apt clean

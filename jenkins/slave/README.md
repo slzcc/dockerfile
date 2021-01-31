@@ -1,9 +1,9 @@
-## slave-jenkins-jnlp
+## Jenkins Jnlp
 
+base-ubuntu/Dockerfile
 
-对等关系:
+基础镜像:
 
 ```
-Dockerfile-python3
-slzccjenkins/jnlp:ubuntu-tool-v2
+$ docker pull slzcc/jenkins-jnlp:ubuntu-20.04
 ```

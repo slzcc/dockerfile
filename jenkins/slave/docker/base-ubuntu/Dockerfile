@@ -70,7 +70,6 @@ ENV TZ="Asia/Shanghai" \
 
 # Custom
 RUN curl -sSLf https://bootstrap.pypa.io/get-pip.py | /opt/python3/bin/python3 && \
-    npm install -g npm && \
     ln -sf /usr/local/jdk/bin/* /usr/bin/ && \
     ln -sf /opt/python3/bin/python3 /usr/bin/python3 && \
     rm -rf /tmp/*

@@ -9,7 +9,7 @@ RUN wget -qO- https://www.python.org/ftp/python/3.8.7/Python-3.8.7.tgz | tar zx 
 
 FROM docker:20.10.2 as DockerCli
 
-FROM jenkinsci/jnlp-slave:4.6.1 as JNLP
+FROM jenkins/jnlp-slave:4.6.1 as JNLP
 
 FROM slzcc/java:java-jdk-1.8.0.201 AS JDK
 
@@ -59,6 +59,7 @@ COPY --from=PYTHON /opt/python3 /opt/python3
 RUN pip3 install --upgrade pip && \
     npm install n -g && n stable && \
     ln -sf /usr/local/jdk/bin/* /usr/bin/ && \
+    ln -sf /opt/python3/bin/python3 /usr/bin/python3
     rm -rf /tmp/*
 
 ENV TZ="Asia/Shanghai" \

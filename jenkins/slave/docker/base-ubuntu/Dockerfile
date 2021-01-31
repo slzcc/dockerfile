@@ -1,6 +1,6 @@
 FROM ubuntu:20.04 as PYTHON
 
-RUN apt update && apt install -y gcc make openssl g++ wget zlib1g-dev openssl-devel libffi-devel
+RUN apt update && apt install -y gcc make openssl g++ wget zlib1g-dev libssl-dev
 
 RUN wget -qO- https://www.python.org/ftp/python/3.8.7/Python-3.8.7.tgz | tar zx -C /tmp && \
     cd /tmp/Python-3.8.7 && \
@@ -24,7 +24,7 @@ RUN apt update && \
     apt install -y tzdata && \
     dpkg-reconfigure -f noninteractive tzdata && \
     apt-get install -y apt-utils jq telnet curl wget git unzip vim bind9-utils git-lfs inetutils-ping fontconfig \
-    fonts-dejavu fonts-dejavu-extra fonts-noto-cjk-extra fonts-noto-cjk fonts-baekmuk zlib1g-dev openssl-devel libffi-devel && \
+    fonts-dejavu fonts-dejavu-extra fonts-noto-cjk-extra fonts-noto-cjk fonts-baekmuk zlib1g-dev libssl-dev && \
     fc-cache --force && \
     apt autoremove --purge -y python3 python3-pip && \
     rm -rf /var/lib/apt/lists/* && \

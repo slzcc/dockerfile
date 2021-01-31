@@ -69,8 +69,7 @@ ENV TZ="Asia/Shanghai" \
     PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/python3/bin
 
 # Custom
-RUN /opt/python3/bin/pip3 install ssl && \
-    /opt/python3/bin/pip3 install --upgrade pip && \
+RUN curl -sSLf https://bootstrap.pypa.io/get-pip.py | /opt/python3/bin/python3 && \
     npm install -g npm && \
     ln -sf /usr/local/jdk/bin/* /usr/bin/ && \
     ln -sf /opt/python3/bin/python3 /usr/bin/python3 && \

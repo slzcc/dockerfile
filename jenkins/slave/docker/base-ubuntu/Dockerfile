@@ -1,6 +1,6 @@
 FROM ubuntu:20.04 as PYTHON
 
-RUN apt update && apt install -y gcc make openssl g++
+RUN apt update && apt install -y gcc make openssl g++ wget
 
 RUN wget -qO- https://www.python.org/ftp/python/3.8.7/Python-3.8.7.tgz | tar zx -C /tmp && \
     cd /tmp/Python-3.8.7 && \

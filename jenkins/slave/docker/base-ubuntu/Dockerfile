@@ -21,7 +21,8 @@ USER root
 # install Base Tools
 RUN apt update && \
     apt-get install -y jq telnet curl wget git unzip vim bind9-utils git-lfs inetutils-ping \
-    fonts-dejavu fonts-dejavu-extra fonts-noto-cjk-extra fonts-noto-cjk fonts-baekmuk zlib1g-dev && \
+    fonts-dejavu fonts-dejavu-extra fonts-noto-cjk-extra fonts-noto-cjk fonts-baekmuk zlib1g-dev \
+    fontconfig fontconfig-config && \
     fc-cache --force && \
     apt autoremove --purge -y python3 python3-pip && \
     locale-gen en_US.UTF-8 && \

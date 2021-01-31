@@ -20,7 +20,7 @@ USER root
 
 # install Base Tools
 RUN apt update && \
-    apt-get install -y jq telnet curl wget git unzip vim npm nodejs bind9-utils git-lfs inetutils-ping \
+    apt-get install -y jq telnet curl wget git unzip vim bind9-utils git-lfs inetutils-ping \
     fonts-dejavu fonts-dejavu-extra fonts-noto-cjk-extra fonts-noto-cjk fonts-baekmuk zlib1g-dev && \
     fc-cache --force && \
     apt autoremove --purge -y python3 python3-pip && \
@@ -40,6 +40,11 @@ RUN apt update && \
 # install Maven
 RUN wget -qO- http://mirrors.tuna.tsinghua.edu.cn/apache/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz | tar zx -C /opt/ && \
     ln -sf /opt/apache-maven-3.6.3/bin/mvn /usr/local/bin/
+
+# install nodejs
+RUN wget -qO- https://nodejs.org/dist/v15.6.0/node-v15.6.0-linux-x64.tar.gz | tar zx -C /opt/ && \
+    ln -sf /opt/node-v15.6.0-linux-x64/bin/node /usr/bin/node && \
+    ln -sf /opt/node-v15.6.0-linux-x64/bin/npm /usr/bin/npm
 
 # install Jenkins slave Plugin
 COPY --from=JNLP /usr/local/bin/jenkins-slave /usr/local/bin/

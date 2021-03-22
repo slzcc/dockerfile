@@ -1,0 +1,189 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: busybox-lifecycles-upload-script
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: busybox-lifecycles-upload-script
+  template:
+    metadata:
+      labels:
+        app: busybox-lifecycles-upload-script
+    spec:
+      terminationGracePeriodSeconds: 120
+      containers:
+      - name: upload
+        image: slzcc/uploadserver:backend-v4
+        ports:
+        - name: http
+          containerPort: 8878
+        volumeMounts:
+        - name: tmp-date
+          mountPath: "/tmp/nginx_upload"
+        - name: storage-date
+          mountPath: "/storage"
+        - mountPath: "/tmp/script"
+          name: script
+        env:
+        - name: TZ
+          value: "Asia/Shanghai"
+        - name: UPLOAD_FILE_PATH
+          value: '/storage/'
+        - name: NGINX_MIRROR_URL
+          value: 'http://test.upload.aws.ops.zhangyue-ops.com/'
+        - name: NGINX_MIRROR_STORAGE_PATH
+          value: 'firmware'
+        - name: REMOVE_SOURCE_FILE_SETUP
+          value: 'False'
+        - name: USE_TIEM_SUB_DIRECTORY
+          value: 'True'
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        imagePullPolicy: IfNotPresent
+        lifecycle:
+          # https://www.freesion.com/article/4483973895/
+          # https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/?spm=a2c6h.12873639.0.0.39e74a0a90nzdV#container-hooks
+          postStart:
+            exec:
+              command: ["/bin/bash", "-c", "date > /tmp/PostStart"]
+          preStop:
+            exec:
+              command: ["/bin/bash", "-c", "/tmp/script/pre-stop.sh"]
+      - name: nginx
+        image: slzcc/uploadserver:frontend-v4
+        ports:
+        - name: http
+          containerPort: 80
+        volumeMounts:
+        - mountPath: "/tmp/script"
+          name: script
+        - name: tmp-date
+          mountPath: "/tmp/nginx_upload"
+        - name: storage-date
+          mountPath: "/mirror"
+        env:
+        - name: TZ
+          value: "Asia/Shanghai"
+        - name: UPLOAD_BACKEND_ADDRESS
+          value: 'http://localhost:8878'
+        - name: NGINX_MIRROR_HOME
+          value: '/mirror'
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        lifecycle:
+          # https://www.freesion.com/article/4483973895/
+          # https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/?spm=a2c6h.12873639.0.0.39e74a0a90nzdV#container-hooks
+          postStart:
+            exec:
+              command: ["/bin/bash", "-c", "date > /tmp/PostStart"]
+          preStop:
+            exec:
+              command: ["/bin/bash", "-c", "/tmp/script/pre-stop.sh"]
+      volumes:
+      - name: script
+        configMap:
+          name: busybox-lifecycles-upload-script
+          defaultMode: 0777
+      - name: tmp-date
+        emptyDir: {}
+      - name: storage-date
+        cephfs:
+          monitors:
+          - 10.200.1.155:6789
+          - 10.200.1.151:6789
+          - 10.200.1.132:6789
+          user: admin
+          secretRef:
+            name: ceph-abroad-admin-secret
+          readOnly: false
+          path: /abroad/project/upload-test
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: busybox-lifecycles-upload-script
+spec:
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: busybox-lifecycles-upload-script
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: busybox-lifecycles-upload-script
+data:
+  pre-stop.sh: |
+    #!/bin/bash
+    # pre-stop.sh
+    # 主要功能: 查看当前容器内是否存在 tcp 链接, 否则
+    # ConfigMap Mount:
+    #   volumes:
+    #     - name: script
+    #       configMap:
+    #         name: busybox-test
+    #         defaultMode: 0777
+
+    NET_DRIVE=${NET_DRIVE:-eth0}
+    IP=`ip a |grep $NET_DRIVE | grep 'inet' | awk '{print $2}' | awk -F/ '{print $1}'`
+    CHECK_PORT=${CHECK_PORT:-:80 :22}
+
+    [[ -n $IP ]] && \
+    for port in ${CHECK_PORT[*]}; do
+        while true; do
+            #date > /data/lifecycles
+            #echo `netstat -anlp | grep 'ESTABLISHED' | grep $port | grep -E "($IP|127.0.0.1)" | wc -l >> /data/lifecycles` $IP >>
+            if [ $(netstat -anlp | grep 'ESTABLISHED' | grep $port | grep -E "($IP|127.0.0.1)" | wc -l) -eq 0 ]; then
+                break
+            fi
+            sleep 2
+        done
+    done
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: busybox-lifecycles-upload-script
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "1024000m"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "18000"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "18000"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "18000"
+spec:
+  rules:
+  - host: test.upload.aws.ops.zhangyue-ops.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: busybox-lifecycles-upload-script
+          servicePort: http

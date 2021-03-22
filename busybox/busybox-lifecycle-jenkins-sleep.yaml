@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: busybox-lifecycles-jenkins-sleep
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: busybox-lifecycles-jenkins-sleep
+  template:
+    metadata:
+      labels:
+        app: busybox-lifecycles-jenkins-sleep
+    spec:
+      terminationGracePeriodSeconds: 120
+      containers:
+      - image: slzcc/terminal-ctl:ubuntu-20.04
+        imagePullPolicy: Always
+        command:
+          - /tmp/script/docker-entrypoint.sh
+        name: busybox
+        volumeMounts:
+        - mountPath: "/tmp/script"
+          name: script
+        lifecycle:
+          preStop:
+           exec:
+             command:
+             - /bin/sh -c sleep 120
+      volumes:
+      - name: script
+        configMap:
+          name: busybox-lifecycles-jenkins
+          defaultMode: 0777
+      restartPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: busybox-lifecycles-jenkins-sleep
+  labels:
+    app: busybox-lifecycles-jenkins-sleep
+spec:
+  ports:
+   - name: http
+     port: 8080
+     targetPort: 8080
+     protocol: TCP
+  selector:
+    app: busybox-lifecycles-jenkins-sleep
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: busybox-lifecycles-jenkins-sleep
+data:
+  docker-entrypoint.sh: |
+    #!/bin/bash
+    
+    wget -qO- https://mirrors.tuna.tsinghua.edu.cn/jenkins/war-stable/2.277.1/jenkins.war > /opt/jenkins.war
+    exec java -jar /opt/jenkins.war

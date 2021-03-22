@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: busybox-lifecycles-sleep-sleep
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: busybox-lifecycles-sleep-sleep
+  template:
+    metadata:
+      labels:
+        app: busybox-lifecycles-sleep-sleep
+    spec:
+      terminationGracePeriodSeconds: 120
+      containers:
+      - image: slzcc/terminal-ctl:ubuntu-20.04
+        imagePullPolicy: Always
+        command:
+          - sleep
+          - "12345678"
+        name: busybox
+        lifecycle:
+          preStop:
+           exec:
+             command:
+             - /bin/sh -c sleep 120
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: busybox-lifecycles-sleep-sleep
+  labels:
+    app: busybox-lifecycles-sleep-sleep
+spec:
+  ports:
+   - name: http
+     port: 80
+     targetPort: 80
+     protocol: TCP
+  selector:
+    app: busybox-lifecycles-sleep-sleep

@@ -1,23 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: busybox
+  name: busybox-nginx
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: busybox
+      app: busybox-nginx
   template:
     metadata:
       labels:
-        app: busybox
+        app: busybox-nginx
     spec:
       terminationGracePeriodSeconds: 70
       containers:
       - image: slzcc/terminal-ctl:ubuntu-20.04
-        command:
-          - sleep
-          - "3600000"
+        args:
+          - nginx
+          - -g
+          - daemon off;
         name: busybox
       restartPolicy: Always
 
@@ -25,7 +26,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: busybox
+  name: busybox-nginx
 spec:
   ports:
   - name: http
@@ -33,4 +34,4 @@ spec:
     targetPort: 80
     protocol: TCP
   selector:
-    app: busybox
+    app: busybox-nginx

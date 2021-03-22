@@ -109,6 +109,8 @@ spec:
           defaultMode: 0777
       - name: tmp-date
         emptyDir: {}
+      - name: storage-date
+        emptyDir: {}
 
 ---
 apiVersion: v1

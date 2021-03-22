@@ -33,7 +33,7 @@ spec:
         - name: UPLOAD_FILE_PATH
           value: '/storage/'
         - name: NGINX_MIRROR_URL
-          value: 'http://test.upload.aws.ops.zhangyue-ops.com/'
+          value: 'http://test.shileizcc.com/'
         - name: NGINX_MIRROR_STORAGE_PATH
           value: 'firmware'
         - name: REMOVE_SOURCE_FILE_SETUP
@@ -109,17 +109,6 @@ spec:
           defaultMode: 0777
       - name: tmp-date
         emptyDir: {}
-      - name: storage-date
-        cephfs:
-          monitors:
-          - 10.200.1.155:6789
-          - 10.200.1.151:6789
-          - 10.200.1.132:6789
-          user: admin
-          secretRef:
-            name: ceph-abroad-admin-secret
-          readOnly: false
-          path: /abroad/project/upload-test
 
 ---
 apiVersion: v1

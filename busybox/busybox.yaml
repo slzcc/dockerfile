@@ -12,6 +12,7 @@ spec:
       labels:
         app: busybox
     spec:
+      terminationGracePeriodSeconds: 70
       containers:
       - image: slzcc/terminal-ctl:ubuntu-20.04
         command:

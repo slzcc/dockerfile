@@ -47,7 +47,6 @@ under the License.
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
   <!-- localRepository
-
    | The path to the local repository maven will use to store artifacts.
    |
    | Default: ${user.home}/.m2/repository
@@ -157,11 +156,6 @@ under the License.
       <url>http://my.repository.com/repo/path</url>
     </mirror>
      -->
-    <mirror>
-      <id>nexus</id>
-      <mirrorOf>*</mirrorOf>
-      <url>http://${NEXUSSERVER}:8081/content/groups/public/</url>
-    </mirror>
   </mirrors>
 
   <!-- profiles
@@ -186,22 +180,6 @@ under the License.
    |
    |-->
   <profiles>
-      <profile>
-        <id>nexus</id>
-        <repositories>
-          <repository>
-            <id>nexus</id>
-            <name>Nexus Repository</name>
-            <url>http:/${NEXUSSERVER}:8081/content/groups/public/</url>
-            <releases>
-              <enabled>true</enabled>
-            </releases>
-            <snapshots>
-              <enabled>true</enabled>
-            </snapshots>
-          </repository>
-        </repositories>
-      </profile>
     <!-- profile
      | Specifies a set of introductions to the build process, to be activated using one or more of the
      | mechanisms described above. For inheritance purposes, and to activate profiles via <activatedProfiles/>
@@ -267,9 +245,6 @@ under the License.
     </profile>
     -->
   </profiles>
-  <activeProfiles>
-    <activeProfile>nexus</activeProfile>
-  </activeProfiles>
 
   <!-- activeProfiles
    | List of profiles that are active for all builds.

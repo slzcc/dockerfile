@@ -6,7 +6,7 @@ USER root
 
 RUN apt update && \
     apt install -y git ldap-utils libffi-dev && \
-    apt install -y fonts-baekmuk ttf-baekmuk fonts-nanum language-pack-zh-hans jq telnet && \
+    apt install -y fonts-baekmuk fonts-nanum language-pack-zh-hans jq telnet && \
     locale-gen en_US.UTF-8 && \
     rm -rf  /var/cache/apt/archives/* && \
     apt clean

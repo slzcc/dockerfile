@@ -24,7 +24,7 @@ RUN apt-get update && \
     apt-get install -y git unzip curl wget jq make python3 python3-pip && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
-    pip3 install -y requests awscli
+    pip3 install requests awscli
 
 ENV MAVEN_VERSION=3.8.4 \
     MAVEN_HOME=/apache-maven-3.8.4 \

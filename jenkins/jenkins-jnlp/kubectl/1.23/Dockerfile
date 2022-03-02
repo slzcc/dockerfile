@@ -5,8 +5,8 @@ ARG K8S_VERSION=v1.23.4
 USER root
 
 RUN apt update && \
-    apt install -y git ldap-utils libffi-dev && \
-    apt install -y fonts-baekmuk fonts-nanum language-pack-zh-hans jq telnet && \
+    apt install -y ldap-utils libffi-dev && \
+    apt install -y fonts-baekmuk fonts-nanum language-pack-zh-hans telnet && \
     locale-gen en_US.UTF-8 && \
     rm -rf  /var/cache/apt/archives/* && \
     apt clean

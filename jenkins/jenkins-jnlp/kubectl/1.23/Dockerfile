@@ -1,4 +1,4 @@
-FROM slzcc/jenkins-jnlp:ubuntu-tool-v3
+FROM slzcc/jenkins-jnlp:ubuntu-tool-v4
 
 ARG K8S_VERSION=v1.23.4
 

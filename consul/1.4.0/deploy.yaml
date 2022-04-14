@@ -1,0 +1,212 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: consul-server
+  namespace: consul
+  labels:
+    app: consul
+    chart: consul-helm
+    heritage: Helm
+    release: consul
+spec:
+  maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: consul
+      release: "consul"
+      component: server
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: consul-server
+  namespace: consul
+  labels:
+    app: consul
+    chart: consul-helm
+    heritage: Helm
+    release: consul
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: consul-server
+  namespace: consul
+  labels:
+    app: consul
+    chart: consul-helm
+    heritage: Helm
+    release: consul
+    component: server
+spec:
+  clusterIP: None
+  publishNotReadyAddresses: true
+  ports:
+    - name: http
+      port: 8500
+      targetPort: 8500
+    - name: server
+      port: 8300
+      targetPort: 8300
+    - name: dns-tcp
+      protocol: "TCP"
+      port: 8600
+      targetPort: dns-tcp
+    - name: dns-udp
+      protocol: "UDP"
+      port: 8600
+      targetPort: dns-udp
+  selector:
+    app: consul
+    release: "consul"
+    component: server
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: consul-dns
+  namespace: consul
+  labels:
+    app: consul
+    chart: consul-helm
+    heritage: Helm
+    release: consul
+    component: dns
+spec:
+  type: ClusterIP
+  ports:
+    - name: dns-tcp
+      port: 53
+      protocol: "TCP"
+      targetPort: dns-tcp
+    - name: dns-udp
+      port: 53
+      protocol: "UDP"
+      targetPort: dns-udp
+  selector:
+    app: consul
+    release: "consul"
+    hasDNS: "true"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: consul-ui
+  namespace: consul
+  labels:
+    app: consul
+    chart: consul-helm
+    heritage: Helm
+    release: consul
+    component: ui
+spec:
+  selector:
+    app: consul
+    release: "consul"
+    component: server
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8500
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: consul-server
+  namespace: consul
+  labels:
+    app: consul
+    chart: consul-helm
+    heritage: Helm
+    release: consul
+    component: server
+spec:
+  serviceName: consul-server
+  podManagementPolicy: Parallel
+  replicas: 3
+  selector:
+    matchLabels:
+      app: consul
+      chart: consul-helm
+      release: consul
+      component: server
+      hasDNS: "true"
+  template:
+    metadata:
+      labels:
+        app: consul
+        chart: consul-helm
+        release: consul
+        component: server
+        hasDNS: "true"
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  app: consul
+                  release: "consul"
+                  component: server
+              topologyKey: kubernetes.io/hostname
+      terminationGracePeriodSeconds: 30
+      serviceAccountName: consul-server
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 100
+      containers:
+        - name: consul
+          image: "slzcc/consul:1.4.0"
+          env:
+            - name: SERVERS
+              value: "3"
+            - name: DATA_DIR
+              value: "/consul/data"
+            - name: HOST_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          volumeMounts:
+            - name: data-consul
+              mountPath: /consul/data
+          ports:
+            - name: http
+              containerPort: 8500
+            - name: dns-tcp
+              containerPort: 8600
+              protocol: "TCP"
+            - name: dns-udp
+              containerPort: 8600
+              protocol: "UDP"
+      volumes:
+        - name: data-consul
+          hostPath:
+            path: /kubernetes/consul
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: consul
+  namespace: consul
+spec:
+  rules:
+  - host: example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: consul-ui
+            port:
+              number: 80

@@ -158,7 +158,7 @@ spec:
         runAsUser: 100
       containers:
         - name: consul
-          image: "slzcc/consul:1.4.0"
+          image: "slzcc/consul:1.4.0.1"
           env:
             - name: SERVERS
               value: "3"

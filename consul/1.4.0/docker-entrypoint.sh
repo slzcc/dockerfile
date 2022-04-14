@@ -13,7 +13,7 @@ ulimit -n 65535
 function join_servers_options() {
 	for (( i=1; i<=$SERVERS; i++ )); do
 		if [ ${HOSTNAME%-*}-$((i-1)) != ${HOSTNAME} ]; then
-			RETRY_JOIN_OPTION="${RETRY_JOIN_OPTION} -retry-join ${HOSTNAME%-*}-$((i-1))"
+			RETRY_JOIN_OPTION="${RETRY_JOIN_OPTION} -retry-join ${HOSTNAME%-*}-$((i-1)).${SERVERS_NAME}"
 		fi
 	done
 }

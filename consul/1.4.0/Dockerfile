@@ -14,4 +14,6 @@ RUN wget -O /tmp/dumb-init_${DUMB_INIT_VER}_amd64.deb https://github.com/Yelp/du
     rm -rf /consul_1.4.0_linux_amd64.zip && \
     mv /consul /bin/
 
-ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+COPY docker-entrypoint.sh /usr/bin/
+
+ENTRYPOINT ["/usr/bin/docker-entrypoint.sh"]

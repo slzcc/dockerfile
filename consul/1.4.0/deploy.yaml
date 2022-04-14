@@ -159,6 +159,7 @@ spec:
       containers:
         - name: consul
           image: "slzcc/consul:1.4.0.1"
+          imagePullPolicy: Always
           env:
             - name: SERVERS
               value: "3"

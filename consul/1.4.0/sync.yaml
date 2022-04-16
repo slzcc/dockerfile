@@ -1,0 +1,140 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: consul-sync-catalog
+  namespace: consul
+  labels:
+    app: consul
+    chart: consul-helm
+    heritage: Helm
+    release: consul
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: consul
+      chart: consul-helm
+      release: consul
+      component: sync-catalog
+  template:
+    metadata:
+      labels:
+        app: consul
+        chart: consul-helm
+        release: consul
+        component: sync-catalog
+      annotations:
+        "consul.hashicorp.com/connect-inject": "false"
+    spec:
+      serviceAccountName: consul-sync-catalog
+      containers:
+        - name: consul-sync-catalog
+          image: "hashicorp/consul-k8s-control-plane:0.34.1"
+          env:
+            - name: HOST_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: CONSUL_HTTP_ADDR
+              value: http://consul-server:8500
+          command:
+            - "/bin/sh"
+            - "-ec"
+            - |
+              consul-k8s-control-plane sync-catalog \
+                -log-level=info \
+                -log-json=false \
+                -k8s-default-sync=true \
+                -to-k8s=false \
+                -consul-domain=consul \
+                -allow-k8s-namespace="*" \
+                -deny-k8s-namespace="kube-system" \
+                -deny-k8s-namespace="kube-public" \
+                -k8s-write-namespace=${NAMESPACE} \
+                -node-port-sync-type=ExternalFirst \
+                -consul-node-name=k8s-sync \
+                -add-k8s-namespace-suffix \
+          livenessProbe:
+            httpGet:
+              path: /health/ready
+              port: 8080
+              scheme: HTTP
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 8080
+              scheme: HTTP
+            failureThreshold: 5
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 5
+          resources:
+            limits:
+              cpu: 50m
+              memory: 50Mi
+            requests:
+              cpu: 50m
+              memory: 50Mi
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: consul-sync-catalog
+  namespace: consul
+  labels:
+    app: consul
+    chart: consul-helm
+    heritage: Helm
+    release: consul
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: consul-sync-catalog
+  labels:
+    app: consul
+    chart: consul-helm
+    heritage: Helm
+    release: consul
+rules:
+  - apiGroups: [""]
+    resources:
+      - services
+      - endpoints
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups: [""]
+    resources:
+      - nodes
+    verbs:
+      - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: consul-sync-catalog
+  labels:
+    app: consul
+    chart: consul-helm
+    heritage: Helm
+    release: consul
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: consul-sync-catalog
+subjects:
+  - kind: ServiceAccount
+    name: consul-sync-catalog

@@ -3,6 +3,7 @@
 script_dir=/data/script
 workdir=${workdir:-/data/logs/top}
 IFTOP_WaitingTime=${IFTOP_WaitingTime:-100}
+HISTORY_RESERVE=${HISTORY_RESERVE:-3}
 dt=`date +"%Y%m%d%H%M"`
  
 mkdir -p ${workdir} && chmod 777 ${workdir}
@@ -23,4 +24,4 @@ ps -auxH -wwwwwwwww >> ${workdir}/psaux.out$dt
  
 gzip ${workdir}/*$dt
  
-find ${workdir} -mtime +3 -type f -delete
+find ${workdir} -mtime +${HISTORY_RESERVE} -type f -delete

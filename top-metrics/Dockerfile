@@ -7,6 +7,7 @@ COPY ps_mem.py /data/script/ps_mem.py
 COPY top.sh /data/script/top.sh
 
 ENV workdir=/data/logs/top \
-    IFTOP_WaitingTime=100
+    IFTOP_WaitingTime=100 \
+    HISTORY_RESERVE=3
 
 CMD ["/data/script/top.sh"]

@@ -4,7 +4,8 @@ FROM centos:7.9.2009 as build
 RUN yum install -y wget git curl vim epel-release gcc zlib zlib-devel openssl-devel make libffi-devel
 
 ## install Python
-RUN wget -qO- https://www.python.org/ftp/python/3.9.9/Python-3.9.9.tgz > /data/install/Python-3.9.9.tgz && \
+RUN mkdir -p /data/install && \
+    wget -qO- https://www.python.org/ftp/python/3.9.9/Python-3.9.9.tgz > /data/install/Python-3.9.9.tgz && \
     tar zxf /data/install/Python-3.9.9.tgz -C /data/install && \
     cd /data/install/Python-3.9.9 && \
     ./configure --prefix=/usr/local/python3 && \

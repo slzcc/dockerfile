@@ -6,6 +6,7 @@ RUN yum install -y iotop iftop lib-devel openssl-devel libffi-devel python3
 COPY ps_mem.py /data/script/ps_mem.py
 COPY top.sh /data/script/top.sh
 
-ENV workdir=/data/logs/top
+ENV workdir=/data/logs/top \
+    IFTOP_WaitingTime=100
 
 CMD ["/data/script/top.sh"]

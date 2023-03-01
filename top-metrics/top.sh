@@ -18,7 +18,7 @@ iotop -t -o --iter=1 >> ${workdir}/iotop.out$dt
 iftop -i $(cat /proc/net/dev | awk '{i++; if(i>2){print $1}}' | sed 's/^[t]*//g' | sed 's/[:]*$//g'|grep -E "(ens|eth)") -N -P -t -L 50 -o 40s -s 100 > ${workdir}/iftop.out`date +"%Y%m%d%H%M"` 2>&1
 #iftop -i eth0 -N -P -t -L 50 -o 40s -s 100 > ${workdir}/iftop.out`date +"%Y%m%d%H%M"` 2>&1
  
-ps -auxH >> ${workdir}/psaux.out$dt
+ps -auxH -wwwwwwwww >> ${workdir}/psaux.out$dt
  
 gzip ${workdir}/*$dt
  

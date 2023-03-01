@@ -16,7 +16,7 @@ FROM centos:7.9.2009
 
 RUN yum install -y epel-release libffi-devel iotop iftop
 
-COPY --from=build/usr/local/python3 /usr/local/python3
+COPY --from=build /usr/local/python3 /usr/local/python3
 
 COPY ps_mem.py /data/script/ps.mem.py
 COPY top.sh /data/script/top.sh

@@ -20,6 +20,14 @@ $ tail -f /var/log/shell_audit/audit.log
 |LOG_NAME|日志名称|audit.log|
 |PROFILE_NAME|profile 的名称|shell_audit.sh|
 
+## Build
+
+```
+docker build -t slzcc/history-audit:1.0.0 .
+```
+
+## USE
+
 使用方式:
 
 ```

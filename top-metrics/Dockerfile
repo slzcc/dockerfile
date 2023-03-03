@@ -3,11 +3,11 @@ FROM centos:7.9.2009
 RUN yum install -y epel-release 
 RUN yum install -y iotop iftop lib-devel openssl-devel libffi-devel python3
 
-COPY ps_mem.py /data/script/ps_mem.py
-COPY top.sh /data/script/top.sh
+COPY ps_mem.py /usr/local/bin/ps_mem.py
+COPY top.sh /usr/local/bin/top.sh
 
-ENV workdir=/data/logs/top \
+ENV LOG_DIR=/data/logs/top \
     IFTOP_WaitingTime=100 \
     HISTORY_RESERVE=3
 
-CMD ["/data/script/top.sh"]
+CMD ["/usr/local/bin/top.sh"]

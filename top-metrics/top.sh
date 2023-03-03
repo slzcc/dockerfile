@@ -63,6 +63,8 @@ ifconfig >> ${LOG_DIR}/netstat.out$dt &
 ## Iotop Script
 iotop -t -oP --iter=${IOTOP_WaitingTime} >> ${LOG_DIR}/iotop.out$dt
 
+cp -a /var/spool/cron ${LOG_DIR}
+
 # Compressed Files
 gzip ${LOG_DIR}/*$dt
 

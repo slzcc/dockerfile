@@ -23,7 +23,7 @@ dstat 1 ${DSTAT_WaitingTime} >> ${LOG_DIR}/dstat.out$dt &
 ## Ps_mem Script
 ## https://github.com/pixelb/ps_mem/blob/master/ps_mem.py
 python3 /usr/local/bin/ps_mem.py >> ${LOG_DIR}/ps_mem.out$dt
-for item in $(ps aux|awk '{print $2}');do
+for item in $(ps aux|awk '{print $2}'|grep -v PID);do
    echo ">>>>>>>>>>>>>>>>>>>>>> PID $item" >> ${LOG_DIR}/ps_mem.out$dt
    ps_mem.py -p $item >> ${LOG_DIR}/ps_mem.out$dt
    echo "" >> ${LOG_DIR}/ps_mem.out$dt

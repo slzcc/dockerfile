@@ -11,7 +11,7 @@ docker build -t slzcc/top-metrics:1.0.1 .
 USE
 
 ```
-time docker run --name top-metrics --pid=host --net=host --privileged=true --rm -t -v /data/logs/top:/data/logs/top slzcc/top-metrics:1.0.1
+time docker run --name top-metrics --pid=host --net=host --privileged=true --rm -t -v /etc/localtime:/etc/localtime -v /data/logs/top:/data/logs/top slzcc/top-metrics:1.0.1
 
 real	1m51.738s
 user	0m0.022s

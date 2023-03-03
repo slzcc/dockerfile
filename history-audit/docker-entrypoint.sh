@@ -6,10 +6,18 @@ LOG_NAME=${LOG_NAME:-audit.log}
 PROFILE_NAME=${PROFILE_NAME:-shell_audit.sh}
 
 mkdir -p ${LOG_DIR}
-touch ${LOG_DIR}/${LOG_NAME}
-chmod 002 ${LOG_DIR}/${LOG_NAME}
-chattr +a ${LOG_DIR}/${LOG_NAME}
+# is Files
+if [ ! -f ${LOG_DIR}/${LOG_NAME} ]; then
+    touch ${LOG_DIR}/${LOG_NAME}
+fi
 
+# is File Permissions
+if [ ! $(stat /var/log/shell_audit/audit.log | grep 'Access: ('|awk '{print $2}'|awk -F/ '{print $1}'|sed "s#(##g") -eq 0002 ]; then
+    chmod 002 ${LOG_DIR}/${LOG_NAME}
+    chattr +a ${LOG_DIR}/${LOG_NAME}
+fi
+
+# Set Profile
 > /etc/profile.d/shell_audit.sh
 tee -a /etc/profile.d/shell_audit.sh <<< "HISTSIZE=${HISTORY_SIZE}"
 tee -a /etc/profile.d/shell_audit.sh <<< 'HISTTIMEFORMAT="%Y/%m/%d %T ---- ";export HISTTIMEFORMAT'

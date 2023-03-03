@@ -44,9 +44,7 @@ ps -auxH -wwwwwwwww >> ${LOG_DIR}/psaux.out$dt &
 # Install Iotop
 # [ `rpm -aq | grep -c iotop` -eq 0 ] && yum install -y iotop
 ## Iotop Script
-for item in $(seq 1 ${IOTOP_WaitingTime});do
-    iotop -t -o --iter=1 >> ${LOG_DIR}/iotop.out$dt
-done
+iotop -t -o --iter=${IOTOP_WaitingTime} >> ${LOG_DIR}/iotop.out$dt
 
 # Compressed Files
 gzip ${LOG_DIR}/*$dt

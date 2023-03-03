@@ -35,3 +35,9 @@ sys	0m0.018s
 ```
 */3 * * * * docker run --name top-metrics --pid=host --net=host --privileged=true --rm -t -v /var/spool/cron:/var/spool/cron -v /etc/localtime:/etc/localtime -v /data/logs/top:/data/logs/top slzcc/top-metrics:1.0.3
 ```
+
+或重定向追加:
+
+```
+sudo tee -a /var/spool/cron/centos <<< "*/3 * * * * sudo docker run --name top-metrics --pid=host --net=host --privileged=true --rm -t -v /var/spool/cron:/var/spool/cron -v /etc/localtime:/etc/localtime -v /data/logs/top:/data/logs/top slzcc/top-metrics:1.0.3"
+```

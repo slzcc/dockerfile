@@ -18,17 +18,14 @@ user	0m0.022s
 sys	0m0.018s
 ```
 
-环境变量 `IFTOP_WaitingTime` 控制 `iftop` 获取流量时长, 默认 100 秒.
-
-环境变量 `DSTAT_WaitingTime` 控制 `dstat` 获取指标时长, 默认 100 秒.
-
-环境变量 `IOTOP_WaitingTime` 控制 `iotop` 获取指标时长, 默认 100 秒.
-
-默认 `gz` 文件保留 3 天, 如需修改请传递环境变量 `HISTORY_RESERVE` 解决.
-
-日志默认存放 `/data/logs/top` 中, 使用变量 `LOG_DIR` 环境变量控制.
-
-输出 `DEBUG` 日志, 默认为 `false`.
+|ENV|说明|默认值|
+|-|-|-|
+|IFTOP_WaitingTime|iftop 执行时长|100|
+|DSTAT_WaitingTime|dstat 执行时长|100|
+|IOTOP_WaitingTime|iotop 执行时长|100|
+|HISTORY_RESERVE|保留压缩文件时长(天)|3|
+|LOG_DIR|默认日志存放路径|/data/logs/top|
+|DEBUG|输出 Shell debug 日志|false|
 
 放置定时任务中:
 

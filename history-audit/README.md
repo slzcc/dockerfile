@@ -13,12 +13,12 @@ $ tail -f /var/log/shell_audit/audit.log
 
 可修改的环境变量
 
-|ENV|说明|
-|-|-|
-|HISTORY_SIZE|记录 History 的总数量, 当执行 history 命令时使用此值, 默认值 `204800`|
-|LOG_DIR|日志文件存放路径, 默认 `/var/log/shell_audit`|
-|LOG_NAME|日志名称, 默认 `audit.log`|
-|PROFILE_NAME|profile 的名称, 默认 `shell_audit.sh`|
+|ENV|说明|默认值|
+|-|-|-|
+|HISTORY_SIZE|记录 History 的总数量, 当执行 history 命令时使用此值|204800|
+|LOG_DIR|日志文件存放路径|/var/log/shell_audit|
+|LOG_NAME|日志名称|audit.log|
+|PROFILE_NAME|profile 的名称|shell_audit.sh|
 
 使用方式:
 

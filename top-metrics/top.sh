@@ -49,8 +49,13 @@ pstree -apnhgsu >> ${LOG_DIR}/pstree.out$dt &
 # Install Netstat
 # [ `rpm -aq | grep -c net-tools` -eq 0 ] && yum install -y net-tools
 ## Netstat Script
-netstat -lnput >> ${LOG_DIR}/netstat.out$dt &
-ifconfig >> ${LOG_DIR}/netstat.out$dt &
+netstat -lnput >> ${LOG_DIR}/sysstat.out$dt & ; echo "" >> ${LOG_DIR}/sysstat.out$dt
+ifconfig >> ${LOG_DIR}/sysstat.out$dt & ; echo "" >> ${LOG_DIR}/sysstat.out$dt
+route >> ${LOG_DIR}/sysstat.out$dt & ; echo "" >> ${LOG_DIR}/sysstat.out$dt
+df -h >> ${LOG_DIR}/sysstat.out$dt & ; echo "" >> ${LOG_DIR}/sysstat.out$dt
+free -h >> ${LOG_DIR}/sysstat.out$dt & ; echo "" >> ${LOG_DIR}/sysstat.out$dt
+fdisk -l >> ${LOG_DIR}/sysstat.out$dt & ; echo "" >> ${LOG_DIR}/sysstat.out$dt
+lsblk >> ${LOG_DIR}/sysstat.out$dt & ; echo "" >> ${LOG_DIR}/sysstat.out$dt
 
 # Install Pstack
 # [ `rpm -aq | grep -c gdb` -eq 0 ] && yum install -y gdb

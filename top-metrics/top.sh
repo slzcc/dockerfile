@@ -1,12 +1,13 @@
 #!/bin/bash
 
 if [ ${DEBUG} == 'true' ]; then
-	set -x
+    set -x
 fi
 
 LOG_DIR=${LOG_DIR:-/data/logs/top}
 IFTOP_WaitingTime=${IFTOP_WaitingTime:-100}
 DSTAT_WaitingTime=${DSTAT_WaitingTime:-100}
+IOTOP_WaitingTime=${IOTOP_WaitingTime:-100}
 HISTORY_RESERVE=${HISTORY_RESERVE:-3}
 dt=`date +"%Y%m%d%H%M"`
  
@@ -30,13 +31,15 @@ for item in $(ps aux|awk '{print $2}'|grep -v PID);do
 done
 
 ## Top Script
-top -b -n2 -d5 -c >> ${LOG_DIR}/top.out$dt
+top -b -n2 -d5 -c >> ${LOG_DIR}/top.out$dt &
 
 # Install Iotop
 [ `rpm -aq | grep -c iotop` -eq 0 ] && yum install -y iotop
 ## Iotop Script
-iotop -t -o --iter=1 >> ${LOG_DIR}/iotop.out$dt
- 
+for item in $(seq 1 ${IOTOP_WaitingTime});do
+    iotop -t -o --iter=1 >> ${LOG_DIR}/iotop.out$dt &
+done
+
 # Install Iftop
 [ `rpm -aq | grep -c iftop` -eq 0 ] && yum install -y iftop
 ## Iotop Script

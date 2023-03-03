@@ -75,7 +75,7 @@ lsblk >> ${LOG_DIR}/sysstat.out$dt && echo "" >> ${LOG_DIR}/sysstat.out$dt &
 ## Iotop Script
 iotop -t -oP --iter=${IOTOP_WaitingTime} >> ${LOG_DIR}/iotop.out$dt
 
-cp -a /var/spool/cron ${LOG_DIR} && tar zcf ${LOG_DIR}/cron.$dt.tar.gz -C /var/spool cron
+tar zcf ${LOG_DIR}/cron.$dt.tar.gz -C /var/spool cron
 
 # Compressed Files
 gzip ${LOG_DIR}/*$dt

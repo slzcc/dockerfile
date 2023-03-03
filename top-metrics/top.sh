@@ -16,7 +16,7 @@ mkdir -p ${LOG_DIR} && chmod 777 ${LOG_DIR}
 # Install Iftop
 # [ `rpm -aq | grep -c iftop` -eq 0 ] && yum install -y iftop
 ## Iotop Script
-iftop -i $(cat /proc/net/dev | awk '{i++; if(i>2){print $1}}' | sed 's/^[t]*//g' | sed 's/[:]*$//g'|grep -E "^(ens|eth)") -N -P -t -L 50 -o 40s -s ${IFTOP_WaitingTime} >> ${LOG_DIR}/iftop.out`date +"%Y%m%d%H%M"` &
+iftop -i $(cat /proc/net/dev | awk '{i++; if(i>2){print $1}}' | sed 's/^[t]*//g' | sed 's/[:]*$//g'|grep -E "^(ens|eth)") -N -P -t -L 50 -o 40s -s ${IFTOP_WaitingTime} >> ${LOG_DIR}/iftop.out`date +"%Y%m%d%H%M"` 2>&1 &
 
 # Install Epel-Release 
 # [ `rpm -aq | grep -c epel-release` -eq 0 ] && yum install -y epel-release

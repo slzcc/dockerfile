@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if [ ${DEBUG} == 'true' ]; then
+	set -x
+fi
+
 LOG_DIR=${LOG_DIR:-/data/logs/top}
 IFTOP_WaitingTime=${IFTOP_WaitingTime:-100}
 DSTAT_WaitingTime=${DSTAT_WaitingTime:-100}
@@ -14,7 +18,7 @@ mkdir -p ${LOG_DIR} && chmod 777 ${LOG_DIR}
 # Install dstat
 [ `rpm -aq | grep -c dstat` -eq 0 ] && yum install -y dstat
 ## Dstat Script
-dstat 1 ${DSTAT_WaitingTime} >> {LOG_DIR}/dstat.out$dt &
+dstat 1 ${DSTAT_WaitingTime} >> ${LOG_DIR}/dstat.out$dt &
 
 ## Ps_mem Script
 ## https://github.com/pixelb/ps_mem/blob/master/ps_mem.py

@@ -9,6 +9,7 @@ COPY top.sh /usr/local/bin/top.sh
 ENV LOG_DIR=/data/logs/top \
     IFTOP_WaitingTime=100 \
     DSTAT_WaitingTime=100 \
-    HISTORY_RESERVE=3
+    HISTORY_RESERVE=3 \
+    DEBUG=false
 
 CMD ["/usr/local/bin/top.sh"]

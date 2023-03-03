@@ -5,7 +5,7 @@ LOG_DIR=${LOG_DIR:-/var/log/shell_audit}
 LOG_NAME=${LOG_NAME:-audit.log}
 PROFILE_NAME=${PROFILE_NAME:-shell_audit.sh}
 
-mkdir ${LOG_DIR}
+mkdir -p ${LOG_DIR}
 touch ${LOG_DIR}/${LOG_NAME}
 chmod 002 ${LOG_DIR}/${LOG_NAME}
 chattr +a ${LOG_DIR}/${LOG_NAME}

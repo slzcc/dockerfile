@@ -1,5 +1,7 @@
 FROM centos:7.9.2009
 
+RUN yum install -y e2fsprogs
+
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
 ENV HISTORY_SIZE=204800 \

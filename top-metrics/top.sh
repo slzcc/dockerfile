@@ -36,15 +36,32 @@ for item in $(ps aux|awk '{print $2}'|grep -v PID);do
 done
 
 ## Top Script
-top -b -n2 -d5 -c >> ${LOG_DIR}/top.out$dt &
+top -b -n2 -d5 -c -H >> ${LOG_DIR}/top.out$dt &
 
 ## PS Script
 ps -auxH -wwwwwwwww >> ${LOG_DIR}/psaux.out$dt &
 
+# Install Psmisc
+# [ `rpm -aq | grep -c psmisc` -eq 0 ] && yum install -y psmisc
+## Pstree Script
+pstree -apnhgsu >> ${LOG_DIR}/pstree.out$dt &
+
+# Install Netstat
+# [ `rpm -aq | grep -c net-tools` -eq 0 ] && yum install -y net-tools
+## Netstat Script
+netstat -lnput >> ${LOG_DIR}/netstat.out$dt &
+ifconfig >> ${LOG_DIR}/netstat.out$dt &
+
+# Install Pstack
+# [ `rpm -aq | grep -c gdb` -eq 0 ] && yum install -y gdb
+# for item in $(pgrep -uroot);do
+#     pstack $item
+# done
+
 # Install Iotop
 # [ `rpm -aq | grep -c iotop` -eq 0 ] && yum install -y iotop
 ## Iotop Script
-iotop -t -o --iter=${IOTOP_WaitingTime} >> ${LOG_DIR}/iotop.out$dt
+iotop -t -oP --iter=${IOTOP_WaitingTime} >> ${LOG_DIR}/iotop.out$dt
 
 # Compressed Files
 gzip ${LOG_DIR}/*$dt

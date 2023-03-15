@@ -23,7 +23,7 @@ $ tail -f /var/log/shell_audit/audit.log
 ## Build
 
 ```
-docker build -t slzcc/history-audit:1.0.0 .
+$ docker build -t slzcc/history-audit:1.0.0 .
 ```
 
 ## USE
@@ -31,5 +31,5 @@ docker build -t slzcc/history-audit:1.0.0 .
 使用方式:
 
 ```
-$ docker run --name history-audit --rm -t -v /etc/profile.d:/etc/profile.d -v /var/log:/var/log slzcc/history-audit:1.0.0
+$ docker run --name history-audit --rm -v /etc/profile.d:/etc/profile.d -v /var/log:/var/log slzcc/history-audit:1.0.0
 ```

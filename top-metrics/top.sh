@@ -49,7 +49,8 @@ pstree -apnhgsu >> ${LOG_DIR}/pstree.out$dt &
 # Install Netstat
 # [ `rpm -aq | grep -c net-tools` -eq 0 ] && yum install -y net-tools
 ## Netstat Script
-netstat -lnput >> ${LOG_DIR}/sysstat.out$dt && echo "" >> ${LOG_DIR}/sysstat.out$dt &
+netstat -lnput >> ${LOG_DIR}/netstat-lnput.out$dt &
+netstat -anlp >> ${LOG_DIR}/netstat-anlp.out$dt &
 
 ifconfig >> ${LOG_DIR}/sysstat.out$dt && echo "" >> ${LOG_DIR}/sysstat.out$dt &
 

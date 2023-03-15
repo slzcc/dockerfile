@@ -151,7 +151,13 @@ systemd,1,1
   |   `-{accounts-daemon},597,579
 ```
 
-`sysstat.out202303031745.gz` 类文件会收集 `netstat`、`ifconfig`、`route`、`df`、`free`、`fdisk`、`lsblk` 等命令指标
+`sysstat.out202303031745.gz` 类文件会收集 `ifconfig`、`route`、`df`、`free`、`fdisk`、`lsblk` 等命令指标
+
+`netstat.out202303031745.gz` 类日志会被收集到 `netstat-anlp` 和 `netstat-lnput` 中, 当需要记录访问的连接数量:
+
+```
+$ zcat netstat-anlp.out202303031745.gz |grep ":8500"|awk '{print $5}'|awk -F: '{print $1}'|sort|uniq -c
+```
 
 `top.out202303031745.gz` 类文件收集 `top` 命令指标
 
@@ -174,13 +180,13 @@ KiB Swap:        0 total,        0 free,        0 used.  6705792 avail Mem
 ## Build
 
 ```
-docker build -t slzcc/top-metrics:1.0.3 .
+$ docker build -t slzcc/top-metrics:1.0.4 .
 ```
 
 ## USE
 
 ```
-time docker run --name top-metrics --pid=host --net=host --privileged=true --rm -t -v /var/spool/cron:/var/spool/cron -v /etc/localtime:/etc/localtime -v /data/logs/top:/data/logs/top slzcc/top-metrics:1.0.3
+$ time docker run --name top-metrics --pid=host --net=host --privileged=true --rm -t -v /var/spool/cron:/var/spool/cron -v /etc/localtime:/etc/localtime -v /data/logs/top:/data/logs/top slzcc/top-metrics:1.0.4
 
 real	1m51.738s
 user	0m0.022s
@@ -199,11 +205,11 @@ sys	0m0.018s
 放置定时任务中:
 
 ```
-*/3 * * * * docker run --name top-metrics --pid=host --net=host --privileged=true --rm -t -v /var/spool/cron:/var/spool/cron -v /etc/localtime:/etc/localtime -v /data/logs/top:/data/logs/top slzcc/top-metrics:1.0.3
+*/3 * * * * docker run --name top-metrics --pid=host --net=host --privileged=true --rm -t -v /var/spool/cron:/var/spool/cron -v /etc/localtime:/etc/localtime -v /data/logs/top:/data/logs/top slzcc/top-metrics:1.0.4
 ```
 
 或重定向追加:
 
 ```
-sudo tee -a /var/spool/cron/centos <<< "*/3 * * * * sudo docker run --name top-metrics --pid=host --net=host --privileged=true --rm -t -v /var/spool/cron:/var/spool/cron -v /etc/localtime:/etc/localtime -v /data/logs/top:/data/logs/top slzcc/top-metrics:1.0.3"
+$ sudo tee -a /var/spool/cron/centos <<< "*/3 * * * * sudo docker run --name top-metrics --pid=host --net=host --privileged=true --rm -t -v /var/spool/cron:/var/spool/cron -v /etc/localtime:/etc/localtime -v /data/logs/top:/data/logs/top slzcc/top-metrics:1.0.4"
 ```

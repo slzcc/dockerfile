@@ -130,7 +130,7 @@ RUN curl -fSL "https://www.nomachine.com/free/linux/64/deb" -o nomachine.deb &&\
     sed -i '/DefaultDesktopCommand/c\DefaultDesktopCommand "/usr/bin/startxfce4"' /usr/NX/etc/node.cfg
 
 # Initialization environment
-RUN sed -i '27i ubuntu  ALL=(ALL) NOPASSWD:ALL' /etc/sudoers
+#RUN sed -i '27i ubuntu  ALL=(ALL) NOPASSWD:ALL' /etc/sudoers
 
 # Install Font
 RUN apt update && apt install -y language-pack-zh-hant language-pack-gnome-zh-hant firefox-locale-zh-hant libreoffice-l10n-zh-tw gtk2-engines-murrine ttf-ubuntu-font-family fonts-wqy-microhei && \

@@ -138,9 +138,7 @@ RUN apt update && apt install -y language-pack-zh-hant language-pack-gnome-zh-ha
 
 ENV NOMACHINE="true"
 
-COPY script/local.tar.gz /tmp
-
-RUN tar zxf /tmp/local.tar.gz -C /home/ ubuntu
+COPY script/local.tar.gz /opt
 
 # Docker config
 VOLUME ["/etc/ssh","/home"]

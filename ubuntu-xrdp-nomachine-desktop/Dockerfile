@@ -122,6 +122,7 @@ RUN wget https://chromedriver.storage.googleapis.com/109.0.5414.74/chromedriver_
 RUN pip3 install requests selenium lxml pytz
 
 ## Install nomachine
+# https://github.com/gezp/docker-ubuntu-desktop/blob/main/ubuntu-desktop/20.04/Dockerfile
 RUN curl -fSL "https://www.nomachine.com/free/linux/64/deb" -o nomachine.deb &&\
     dpkg -i nomachine.deb &&\
     groupmod -g 2000 nx &&\
@@ -136,9 +137,10 @@ RUN curl -fSL "https://www.nomachine.com/free/linux/64/deb" -o nomachine.deb &&\
 RUN apt update && apt install -y language-pack-zh-hant language-pack-gnome-zh-hant firefox-locale-zh-hant libreoffice-l10n-zh-tw gtk2-engines-murrine ttf-ubuntu-font-family fonts-wqy-microhei && \
     rm -rf /var/lib/apt/lists/*
 
-ENV NOMACHINE="true"
-
-COPY script/local.tar.gz /opt
+ENV NOMACHINE="true" \
+    LANGUAGE=en_US:en \
+    LANG=C.UTF-8 \
+    TZ=Asia/Shanghai
 
 # Docker config
 VOLUME ["/etc/ssh","/home"]

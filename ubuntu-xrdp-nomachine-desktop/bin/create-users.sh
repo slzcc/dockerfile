@@ -15,6 +15,5 @@ while read id username hash groups; do
         if [ $groups ]; then
                 usermod -aG $groups $username
         fi
-        #tar zxf /opt/local.tar.gz -C /home/$username
         sed -i "27i $username  ALL=(ALL) NOPASSWD:ALL" /etc/sudoers
 done < /etc/users.list

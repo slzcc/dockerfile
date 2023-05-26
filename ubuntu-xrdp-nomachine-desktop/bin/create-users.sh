@@ -15,4 +15,5 @@ while read id username hash groups; do
         if [ $groups ]; then
                 usermod -aG $groups $username
         fi
+        tar zxf /opt/local.tar.gz -C /home/$username
 done < /etc/users.list

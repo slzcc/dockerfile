@@ -34,7 +34,6 @@ fi
 
 #prepare run dir
 mkdir -p /var/run/sshd
-cd ~ && tar zxf /opt/local.tar.gz -C .
 
 # generate xrdp key
 if [ ! -f "/etc/xrdp/rsakeys.ini" ];

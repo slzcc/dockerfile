@@ -140,10 +140,10 @@ ENV NOMACHINE="true"
 
 COPY script/local.tar.gz /tmp
 
-RUN tar zxf /tmp/local.tar.gz -C /home/ubuntu
+RUN tar zxf /tmp/local.tar.gz -C /home/ ubuntu
 
 # Docker config
 VOLUME ["/etc/ssh","/home"]
-EXPOSE 3389 22 9001
+EXPOSE 3389 22 9001 4000
 ENTRYPOINT ["/usr/bin/docker-entrypoint.sh"]
 CMD ["supervisord"]

@@ -65,6 +65,8 @@ uuidgen > /etc/machine-id
 echo "export QT_XKB_CONFIG_ROOT=/usr/share/X11/locale" >> /etc/profile
 
 # nx start
-/etc/NX/nxserver --startup
+if [ -n "${NOMACHINE}" ]; then
+	/etc/NX/nxserver --startup
+fi
 
 exec "$@"

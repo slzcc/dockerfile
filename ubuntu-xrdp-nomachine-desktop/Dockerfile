@@ -113,7 +113,7 @@ RUN wget https://github.com/mozilla/geckodriver/releases/download/v0.31.0/geckod
 
 # install chrome drive geckodriver
 # https://chromedriver.storage.googleapis.com/index.html
-RUN wget https://chromedriver.storage.googleapis.com/109.0.5414.74/chromedriver_linux64.zip && \
+RUN wget https://chromedriver.storage.googleapis.com/113.0.5672.63/chromedriver_linux64.zip && \
     unzip chromedriver_linux64.zip && \
     mv chromedriver /usr/local/bin/ && \
     rm -rf chromedriver_linux64.zip

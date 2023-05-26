@@ -7,3 +7,6 @@
 [submodule "TranscodePDF"]
 	path = TranscodePDF
 	url = https://github.com/slzcc/TranscodePDF
+[submodule "ubuntu-xrdp"]
+	path = ubuntu-xrdp
+	url = https://github.com/slzcc/ubuntu-xrdp.git

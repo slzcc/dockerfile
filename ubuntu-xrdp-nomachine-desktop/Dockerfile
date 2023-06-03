@@ -118,8 +118,17 @@ RUN wget https://chromedriver.storage.googleapis.com/113.0.5672.63/chromedriver_
     mv chromedriver /usr/local/bin/ && \
     rm -rf chromedriver_linux64.zip
 
+# install edge drive geckodriver
+# https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/
+RUN wget https://packages.microsoft.com/repos/edge/pool/main/m/microsoft-edge-stable/microsoft-edge-stable_113.0.1774.57-1_amd64.deb && \
+    dpkg -i microsoft-edge-stable_113.0.1774.57-1_amd64.deb && \
+    wget https://msedgedriver.azureedge.net/113.0.1774.57/edgedriver_linux64.zip && \
+    unzip edgedriver_linux64.zip && \
+    mv msedgedriver /usr/local/bin/ && \
+    rm -rf microsoft-edge-stable_113.0.1774.57-1_amd64.deb edgedriver_linux64.zip
+
 # install pip package
-RUN pip3 install requests selenium lxml pytz
+RUN pip3 install requests selenium==4.8.0 lxml pytz msedge-selenium-tools
 
 ## Install nomachine
 # https://github.com/gezp/docker-ubuntu-desktop/blob/main/ubuntu-desktop/20.04/Dockerfile

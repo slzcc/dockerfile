@@ -5,4 +5,4 @@ RUN apt update && apt install -y dante-server openssl && \
 
 COPY docker-entrypoint.sh /bin/
 
-CMD ["/docker-entrypoint.sh"]
+CMD ["docker-entrypoint.sh"]

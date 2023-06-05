@@ -4,12 +4,12 @@ IS_USERNAME=${IS_USERNAME:-'true'}
 ROOT_PASSWORD=${ROOT_PASSWORD:-''}
 DANTED_PROD=${DANTED_PROD:-1080}
 
-if [ -z "${ROOT_PASSWORD}" ]; then
+if test -z $ROOT_PASSWORD; then
     ROOT_PASSWORD=`openssl rand -base64 16`
     echo root:${ROOT_PASSWORD} | chpasswd
 fi
 
-if [ -z "${IS_USERNAME}" ]; then
+if test -z $IS_USERNAME; then
 cat >/etc/danted.conf<<EOF
 logoutput: /dev/stdout
 user.privileged: root

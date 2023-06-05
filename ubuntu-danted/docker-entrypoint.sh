@@ -41,6 +41,10 @@ echo Username: root, Password: ${ROOT_PASSWORD}
 
 echo Example: curl -v -x socks5://root:${ROOT_PASSWORD}@127.0.0.1:${DANTED_PROD} http://www.google.com/
 
+echo
+
+echo
+
 else
 cat >/etc/danted.conf<<EOF
 logoutput: /dev/stdout
@@ -71,6 +75,10 @@ EOF
 echo socket user authentication mode is not used
 
 echo Example: curl -v -x socks5://127.0.0.1:${DANTED_PROD} http://www.google.com/
+
+echo
+
+echo
 
 fi
 

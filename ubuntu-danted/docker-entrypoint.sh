@@ -22,7 +22,7 @@ internal: 0.0.0.0 port=${DANTED_PROD}
 external: eth0
 
 # socks-rules determine what is proxied through the external interface.
-socksmethod: username
+socksmethod: username none
 
 # client-rules determine who can connect to the internal interface.
 clientmethod: none
@@ -58,7 +58,7 @@ internal: 0.0.0.0 port=${DANTED_PROD}
 external: eth0
 
 # socks-rules determine what is proxied through the external interface.
-socksmethod: username none
+socksmethod: username
 
 # client-rules determine who can connect to the internal interface.
 clientmethod: none

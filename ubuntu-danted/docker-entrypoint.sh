@@ -35,11 +35,11 @@ socks pass {
     from: 0.0.0.0/0 to: 0.0.0.0/0
 }
 EOF
-printf The socket user authentication mode has been enabled!
+echo The socket user authentication mode has been enabled!
 
-printf Username: root, Password: ${ROOT_PASSWORD}
+echo Username: root, Password: ${ROOT_PASSWORD}
 
-printf Example: curl -v -x socks5://root:${ROOT_PASSWORD}@127.0.0.1:${DANTED_PROD} http://www.google.com/
+echo Example: curl -v -x socks5://root:${ROOT_PASSWORD}@127.0.0.1:${DANTED_PROD} http://www.google.com/
 
 else
 cat >/etc/danted.conf<<EOF
@@ -68,9 +68,9 @@ socks pass {
 }
 EOF
 
-printf socket user authentication mode is not used
+echo socket user authentication mode is not used
 
-printf Example: curl -v -x socks5://127.0.0.1:${DANTED_PROD} http://www.google.com/
+echo Example: curl -v -x socks5://127.0.0.1:${DANTED_PROD} http://www.google.com/
 
 fi
 

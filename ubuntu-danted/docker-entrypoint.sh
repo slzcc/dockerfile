@@ -9,7 +9,7 @@ if [ -z "${ROOT_PASSWORD}" ]; then
     echo root:${ROOT_PASSWORD} | chpasswd
 fi
 
-if [ -n "${IS_USERNAME}" ]; then
+if [ -z "${IS_USERNAME}" ]; then
 cat >/etc/danted.conf<<EOF
 logoutput: /dev/stdout
 user.privileged: root

@@ -11,7 +11,7 @@ fi
 
 if [ -n "${IS_USERNAME}" ]; then
 cat >/etc/danted.conf<<EOF
-logoutput: syslog
+logoutput: /dev/stdout
 user.privileged: root
 user.unprivileged: nobody
 
@@ -43,7 +43,7 @@ echo Example: curl -v -x socks5://root:${ROOT_PASSWORD}@127.0.0.1:${DANTED_PROD}
 
 else
 cat >/etc/danted.conf<<EOF
-logoutput: syslog
+logoutput: /dev/stdout
 user.privileged: root
 user.unprivileged: nobody
 

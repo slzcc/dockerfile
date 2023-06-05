@@ -9,7 +9,7 @@ if [ -z "${ROOT_PASSWORD}" ]; then
     echo root:${ROOT_PASSWORD} | chpasswd
 fi
 
-if [ -z "${IS_USERNAME}" ]; then
+if [ "${IS_USERNAME}" == 'true' ]; then
 cat >/etc/danted.conf<<EOF
 logoutput: /dev/stdout
 user.privileged: root
@@ -58,7 +58,7 @@ internal: 0.0.0.0 port=${DANTED_PROD}
 external: eth0
 
 # socks-rules determine what is proxied through the external interface.
-socksmethod: username
+socksmethod: username none
 
 # client-rules determine who can connect to the internal interface.
 clientmethod: none

@@ -76,7 +76,7 @@ lsblk >> ${LOG_DIR}/sysstat.out$dt && echo "" >> ${LOG_DIR}/sysstat.out$dt &
 # Install sysstat
 # [ `rpm -aq | grep -c sysstat` -eq 0 ] && yum install -y sysstat
 ## Iotop sysstat
-pidstat 1 ${PIDSTAT_WaitingTime} >> ${LOG_DIR}/pidstat.out$dt &
+pidstat -w -u 1 ${PIDSTAT_WaitingTime} >> ${LOG_DIR}/pidstat.out$dt &
 
 vmstat 1 ${VMSTAT_WaitingTime} >> ${LOG_DIR}/vmstat.out$dt &
 

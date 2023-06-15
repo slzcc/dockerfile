@@ -8,6 +8,8 @@ LOG_DIR=${LOG_DIR:-/data/logs/top}
 IFTOP_WaitingTime=${IFTOP_WaitingTime:-100}
 DSTAT_WaitingTime=${DSTAT_WaitingTime:-100}
 IOTOP_WaitingTime=${IOTOP_WaitingTime:-100}
+PIDSTAT_WaitingTime=${PIDSTAT_WaitingTime:-100}
+VMSTAT_WaitingTime=${VMSTAT_WaitingTime:-100}
 HISTORY_RESERVE=${HISTORY_RESERVE:-3}
 dt=`date +"%Y%m%d%H%M"`
  
@@ -70,6 +72,13 @@ lsblk >> ${LOG_DIR}/sysstat.out$dt && echo "" >> ${LOG_DIR}/sysstat.out$dt &
 # for item in $(pgrep -uroot);do
 #     pstack $item
 # done
+
+# Install sysstat
+# [ `rpm -aq | grep -c sysstat` -eq 0 ] && yum install -y sysstat
+## Iotop sysstat
+pidstat 1 ${PIDSTAT_WaitingTime} >> ${LOG_DIR}/pidstat.out$dt &
+
+vmstat 1 ${VMSTAT_WaitingTime} >> ${LOG_DIR}/vmstat.out$dt &
 
 # Install Iotop
 # [ `rpm -aq | grep -c iotop` -eq 0 ] && yum install -y iotop

@@ -180,13 +180,13 @@ KiB Swap:        0 total,        0 free,        0 used.  6705792 avail Mem
 ## Build
 
 ```
-$ docker build -t slzcc/top-metrics:1.0.5 .
+$ docker build -t slzcc/top-metrics:1.0.6 .
 ```
 
 ## USE
 
 ```
-$ time docker run --name top-metrics --pid=host --net=host --privileged=true --rm -t -v /var/spool/cron:/var/spool/cron -v /etc/localtime:/etc/localtime -v /data/logs/top:/data/logs/top slzcc/top-metrics:1.0.5
+$ time docker run --name top-metrics --pid=host --net=host --privileged=true --rm -t -v /var/spool/cron:/var/spool/cron -v /etc/localtime:/etc/localtime -v /data/logs/top:/data/logs/top slzcc/top-metrics:1.0.6
 
 real	1m51.738s
 user	0m0.022s
@@ -205,11 +205,11 @@ sys	0m0.018s
 放置定时任务中:
 
 ```
-*/3 * * * * docker run --name top-metrics --pid=host --net=host --privileged=true --rm -t -v /var/spool/cron:/var/spool/cron -v /etc/localtime:/etc/localtime -v /data/logs/top:/data/logs/top slzcc/top-metrics:1.0.5
+*/3 * * * * docker run --name top-metrics --pid=host --net=host --privileged=true --rm -t -v /var/spool/cron:/var/spool/cron -v /etc/localtime:/etc/localtime -v /data/logs/top:/data/logs/top slzcc/top-metrics:1.0.6
 ```
 
 或重定向追加:
 
 ```
-$ sudo tee -a /var/spool/cron/centos <<< "*/3 * * * * sudo docker run --name top-metrics --pid=host --net=host --privileged=true --rm -t -v /var/spool/cron:/var/spool/cron -v /etc/localtime:/etc/localtime -v /data/logs/top:/data/logs/top slzcc/top-metrics:1.0.5"
+$ sudo tee -a /var/spool/cron/centos <<< "*/3 * * * * sudo docker run --name top-metrics --pid=host --net=host --privileged=true --rm -t -v /var/spool/cron:/var/spool/cron -v /etc/localtime:/etc/localtime -v /data/logs/top:/data/logs/top slzcc/top-metrics:1.0.6"
 ```

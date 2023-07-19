@@ -7,7 +7,7 @@ RUN make
 
 FROM ubuntu:20.04
 RUN apt-get update \
- && apt-get install -y curl
+ && apt-get install -y curl iproute2
 ADD https://core.telegram.org/getProxySecret /etc/telegram/proxy-secret
 COPY --from=build /opt/MTProxy/objs/bin/mtproto-proxy /usr/local/bin/
 COPY run.sh /

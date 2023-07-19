@@ -4,7 +4,7 @@ Dockerfile for MTProxy
 
 ### Building
 
-    docker build -t telegram-proxy .
+    docker build -t slzcc/telegram-proxy:latest .
 
 
 ### Running
@@ -14,7 +14,7 @@ Dockerfile for MTProxy
         -v proxy-config:/data \
         -e SECRET=00000000000000000000000000000000 \
         --name=telegram-proxy \
-        telegram-proxy
+        slzcc/telegram-proxy:latest
 
 
 ### Links

@@ -42,5 +42,5 @@
 启动:
 
 ```
-$ docker run -d -p 29588:29588 -p 29588:29588/udp --name v2ray --restart always -v /data/v2ray:/etc/v2ray slzcc/v2ray
+$ docker run -d -p 29588:29588 -p 29588:29588/udp --name v2ray --restart always -v /data/v2ray:/etc/v2ray slzcc/v2ray:5.7.0
 ```

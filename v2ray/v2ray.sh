@@ -56,6 +56,7 @@ else
 fi
 
 # Prepare
+mkdir -p /usr/local/share/v2ray/
 echo "Prepare to use"
 unzip v2ray.zip && chmod +x v2ray
 mv v2ray /usr/bin/

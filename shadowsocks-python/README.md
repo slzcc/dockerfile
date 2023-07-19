@@ -15,8 +15,10 @@
 }
 ```
 
+> 参考文档: https://github.com/teddysun/shadowsocks_install/tree/master/docker/shadowsocks-python
+
 启动:
 
 ```
-$ docker run -d -p 10820:10820 -p 10820:10820/udp --name ss-python --restart always -v /data/shadowsocks-python:/etc/shadowsocks-python slzcc/shadowsocks-python
+$ docker run -d -p 10820:10820 -p 10820:10820/udp --name ss-python --restart always -v /data/shadowsocks-python:/etc/shadowsocks-python slzcc/shadowsocks-python:3.0.0
 ```

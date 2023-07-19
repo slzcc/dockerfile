@@ -1,11 +1,11 @@
-FROM debian AS build
+FROM ubuntu:20.04 AS build
 RUN apt-get update \
  && apt-get install -y git gcc make libssl-dev zlib1g-dev
 WORKDIR /opt/MTProxy
 RUN git clone https://github.com/TelegramMessenger/MTProxy .
 RUN make
 
-FROM debian
+FROM ubuntu:20.04
 RUN apt-get update \
  && apt-get install -y curl
 ADD https://core.telegram.org/getProxySecret /etc/telegram/proxy-secret

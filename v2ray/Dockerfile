@@ -1,6 +1,7 @@
 FROM ubuntu:20.04
 
-RUN bash <(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh) 
+RUN apt update && apt install -y curl && \
+    bash <(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh) 
 
 ENV V2RAY_VMESS_AEAD_FORCED=false
 
